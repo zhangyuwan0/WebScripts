@@ -44,7 +44,7 @@ def uploadFile(url, filePath, cookies):
         # 判断文件是否是jpg,png,tif,bmp中的一种
         fileName = os.path.basename(filePath)
         #　如果该文件不在允许上传的文件类型内
-        """BUG-- 
+        """BUG--
             大意的把split的()写成了[]
             导致报出错误"""
         if fileName.split(".")[-1] not in uploadType:
@@ -59,15 +59,17 @@ def uploadFile(url, filePath, cookies):
     file = {"file": target_file}
     # 之前报http 400错误
     #　解决过程：
-    """ 1.查看 Http 400错误的含义
+    """ 
+        1.查看 Http 400错误的含义
         2.查看description内容并搜索相关问题解决方案
         3.发现是参数post参数与服务器参数不对称的问题
         4.查看FileService.singleUploadFile函数中的XHR代码段
-        发现参数名不是"uploadFile"而是"file" 
-        5.改变参数重试,问题解决！"""
+        发现参数名不是"uploadFile"而是"file"
+        5.改变参数重试,问题解决！
+    """
     # 现在调试 出现HTTP 500 错误
-    # 1. 测试是否是由于没有添加headers的原因 【×】
-    # 2. 再次测试 不添加headers的请求
+    # 1. 测试是否是由于没有添加headers的原因  【×】
+    # 2. 再次测试 不添加headers的请求 【×】
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Referer": "http://rc.hanvon.com/rc/rapid",
@@ -85,8 +87,6 @@ def uploadFile(url, filePath, cookies):
             # 不存在inFid键 文件不能被识别
             raise ValueError("File can not be identified.")
     except Exception as e:
-        # 转换错误打印错误页面信息
-        print(r.text)
         # 抛出HTTP 错误代码
         raise ValueError("the error code is " + str(r.status_code))
     # 转换成 返回json
@@ -116,7 +116,7 @@ def recognitionPicture(url, result_dict, cookies, docType="txt"):
         "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0"
     }
     # 填写文件请求
-    """ 之前BUG -> HTTP 415 
+    """ 之前BUG -> HTTP 415
         问题原因：post参数填写错误,没有将json_data填入到data
         解决方法: 将填写在json参数的json_data改为填入到data参数中
     """
@@ -168,7 +168,6 @@ def convertPDFpicture(filePath, convertedFolder="results\\", docType="txt"):
         raise FileNotFound("this path is not exists!")
     # 第一步：获取cookie 以便之后的操作
     cookies = convertCookie(getCookieWithGET(targetURL))
-    print()
     # 第二步：向汉王服务器上传图片
     result_dict = uploadFile(uploadURL, filePath, cookies)
     # 第三步: 请求API识别该图片
@@ -177,4 +176,4 @@ def convertPDFpicture(filePath, convertedFolder="results\\", docType="txt"):
     downloadResult(convertedFolder, result, docType)
 
 if __name__ == '__main__':
-    convertPDFpicture(r"C:\Users\Administrator\Desktop\测试.png")
+    convertPDFpicture(r"C:\Users\Administrator\Desktop\未命名.jpg")

@@ -1,4 +1,4 @@
-from urllib import request
+from urllib import request, parse
 # 媒体类型
 import mimetypes
 import os
